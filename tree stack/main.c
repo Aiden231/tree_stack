@@ -5,7 +5,7 @@
 // LInked 구현을 위한 구조체 생성
 typedef struct TreeNode {
 	int data;
-	struct TreeNode* left, * rigth;
+	struct TreeNode* left, * right;
 }TreeNode;
 
 // 이진 트리 LInked로 구현
@@ -24,10 +24,12 @@ TreeNode n1 = { 1,&n2,&n7 };
 // 루트는 n1 이다.
 TreeNode* root = &n1;
 
+// 스택 생성
 #define SIZE 100
 int top = -1;
 TreeNode* stack[SIZE];
 
+// 삽입 함수
 void push(TreeNode* p)
 {
 	if (top < SIZE - 1) {
@@ -35,6 +37,7 @@ void push(TreeNode* p)
 	}
 }
 
+// 삭제 함수
 TreeNode* pop()
 {
 	TreeNode* p = NULL;
@@ -43,15 +46,18 @@ TreeNode* pop()
 	}
 	return p;
 }
+
 // 전위 순회 출력 함수
 void preorder_iter(TreeNode* root)
 {
 	push(root);
 	while (top != -1) {
 		root = pop();
-		printf("%d ", root->data);
-		push(root->left);
-		push(root->rigth);
+		if (root != NULL) {
+			printf("%d ", root->data);
+			push(root->right); // stack에 삽입하기 떄문에 오른쪽 자식 먼저 넣기
+			push(root->left);  // 왼쪽 자식 넣기
+		}
 	}
 }
 
@@ -64,8 +70,14 @@ void inorder_iter(TreeNode* root)
 		root = pop();
 		if (!root) break;
 		printf("%d ", root->data);
-		root = root->rigth;
+		root = root->right;
 	}
+}
+
+// 후위 순회 출력 함수
+void postorder_iter(TreeNode* root)
+{
+
 }
 
 int main()
@@ -75,16 +87,17 @@ int main()
 	// 전위 순회 출력
 	printf("1. 전위 순회\n");
 	preorder_iter(root);
-	printf("\n");
+	printf("\n\n");
 
 	// 중위 순회 출력
 	printf("2. 중위 순회\n");
 	inorder_iter(root);
-	printf("\n");
+	printf("\n\n");
 
 	// 후위 순회 출력
 	printf("3. 후위 순회\n");
-	printf("\n");
+	postorder_iter(root);
+	printf("\n\n");
 
 	return 0;
 }
